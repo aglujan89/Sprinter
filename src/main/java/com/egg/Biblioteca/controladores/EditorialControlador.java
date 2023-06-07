@@ -9,6 +9,7 @@ import com.egg.Biblioteca.servicios.EditorialServicio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,17 +24,19 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 
 @Controller
+@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 @RequestMapping("/editorial")
 public class EditorialControlador {
     @Autowired
     private EditorialServicio editorialServicio;
     
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping("/registrar") //localhost:8080/autor/registrar
     public String registrar(){
         return "editorial_form.html";
     }
     
-    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/registro")
     public String registro(@RequestParam String nombre, ModelMap modelo){
         
@@ -50,6 +53,7 @@ public class EditorialControlador {
         return "editorial_list.html";        
     }
     
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     @GetMapping("/lista")
     public String listar(ModelMap modelo){
         List<Editorial> editoriales = editorialServicio.listarEditoriales();
@@ -58,12 +62,14 @@ public class EditorialControlador {
         return "editorial_list.html";
     }
     
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping("modificar/{id}")
     public String modificar(@PathVariable String id, ModelMap modelo){
         modelo.put("editorial", editorialServicio.getOne(id));
         return "editorial_modificar.html";
     }
     
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/modificar/{id}")
     public String modificar(@PathVariable String id, String nombre, ModelMap modelo){
         
@@ -79,6 +85,7 @@ public class EditorialControlador {
         } 
     }
     
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/eliminar/{id}")
     public String eliminar(@PathVariable String id, String nombre, ModelMap modelo) throws MiException, DataIntegrityViolationException{
         try{

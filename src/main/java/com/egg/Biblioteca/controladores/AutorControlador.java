@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author fitog
  */
 @Controller
+@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
 @RequestMapping("/autor") //localhost:8080/autor
 public class AutorControlador {
 
@@ -34,6 +36,7 @@ public class AutorControlador {
         return "autor_form.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/registro")
 //    public String registro(@RequestParam String nombre, ModelMap modelo) {
     public String registro(@RequestParam String nombre, ModelMap modelo) {
@@ -57,6 +60,7 @@ public class AutorControlador {
         return "autor_list.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     @GetMapping("/lista")
     public String listar(ModelMap modelo) {
 
@@ -67,6 +71,7 @@ public class AutorControlador {
         return "autor_list.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping("/modificar/{id}")
     public String modificar(@PathVariable String id, ModelMap modelo) {
         modelo.put("autor", autorServicio.getOne(id));
@@ -74,6 +79,7 @@ public class AutorControlador {
         return "autor_modificar.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/modificar/{id}")
     public String modificar(@PathVariable String id, String nombre, ModelMap modelo) {
         try {
@@ -96,7 +102,7 @@ public class AutorControlador {
 //
 //        return "autor_list.html";
 //    }
-    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/eliminar/{id}")
     public String eliminar(@PathVariable String id, String nombre, ModelMap modelo) throws MiException, DataIntegrityViolationException {
         try {

@@ -9,6 +9,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,8 +31,19 @@ public class Usuario implements UserDetails{
     
     @Enumerated(EnumType.STRING)
     private Rol rol;
+    
+    @OneToOne
+    private Imagen imagen;
 
     public Usuario() {
+    }
+
+    public Imagen getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(Imagen imagen) {
+        this.imagen = imagen;
     }
     
     public String getId() {

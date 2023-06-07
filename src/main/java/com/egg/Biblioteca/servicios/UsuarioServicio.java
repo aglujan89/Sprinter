@@ -2,12 +2,14 @@
  */
 package com.egg.Biblioteca.servicios;
 
+import com.egg.Biblioteca.entidades.Imagen;
 import com.egg.Biblioteca.entidades.Usuario;
 import com.egg.Biblioteca.enumeraciones.Rol;
 import com.egg.Biblioteca.excepciones.MiException;
 import com.egg.Biblioteca.repositorios.UsuarioRepositorio;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import javax.xml.bind.ValidationException;
@@ -22,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -33,9 +36,12 @@ public class UsuarioServicio implements UserDetailsService{
 
 @Autowired
 private UsuarioRepositorio usuarioRepositorio;
+@Autowired
+private ImagenServicio imagenServicio;
+
 
 @Transactional
-public void registrar(String nombre, String email, String password, String password2) throws MiException, ValidationException {
+public void registrar(MultipartFile archivo, String nombre, String email, String password, String password2) throws MiException, ValidationException {
     
     validar(nombre, email, password, password2);
     
@@ -51,6 +57,10 @@ public void registrar(String nombre, String email, String password, String passw
     usuario.setPassword(new BCryptPasswordEncoder().encode(password));
     
     usuario.setRol(Rol.USER);
+    
+    Imagen imagen = imagenServicio.guardar(archivo);
+    
+    usuario.setImagen(imagen);
     
     usuarioRepositorio.save(usuario);
     
@@ -70,6 +80,12 @@ private void validar(String nombre, String email, String password, String passwo
         throw new MiException("La contraseña ingresada deben ser iguales");
     }
 }
+
+public Usuario getOne(String id){
+        return usuarioRepositorio.getOne(id);
+    }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -93,5 +109,62 @@ private void validar(String nombre, String email, String password, String passwo
             return null;
         }
     }
+    
+    public List<Usuario> listarUsuarios() {
+
+        List<Usuario> usuarios = new ArrayList();
+
+        usuarios = usuarioRepositorio.findAll();
+
+        return usuarios;
+    }
+    
+    
+     @Transactional
+    public void actualizar(MultipartFile archivo, String idUsuario, String nombre, String email, String password, String password2) throws MiException {
+
+        validar(nombre, email, password, password2);
+
+        Optional<Usuario> respuesta = usuarioRepositorio.findById(idUsuario);
+        if (respuesta.isPresent()) {
+
+            Usuario usuario = respuesta.get();
+            usuario.setNombre(nombre);
+            usuario.setEmail(email);
+
+            usuario.setPassword(new BCryptPasswordEncoder().encode(password));
+
+            usuario.setRol(Rol.USER);
+            
+            String idImagen = null;
+            
+            if (usuario.getImagen() != null) {
+                idImagen = usuario.getImagen().getId();
+            }
+            
+            Imagen imagen = imagenServicio.actualizar(archivo, idImagen);
+            
+            usuario.setImagen(imagen);
+            
+            usuarioRepositorio.save(usuario);
+        }
+
+    }
+    
+    
+    
+    
+    @Transactional
+    public void cambiarRol(String id){
+        Optional<Usuario> respuesta = usuarioRepositorio.findById(id);
+        if (respuesta.isPresent()) {
+            Usuario usuario = respuesta.get();
+            if (usuario.getRol().equals(Rol.USER)) {
+                usuario.setRol(Rol.ADMIN);
+            }else if(usuario.getRol().equals(Rol.ADMIN)){
+                usuario.setRol(Rol.USER);
+            }
+        }
+    } 
     
 }

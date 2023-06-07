@@ -31,13 +31,23 @@
     font-weight: 500;
 }
 
-.header{
+.header2{
     background-image: url(../img/FondoZoom_2.jpg);
     background-size: cover;
     height: 550px;
     display: flex;
     justify-content: end;
 }
+.bodylist{
+    background-image: url(../img/FondoZoom.jpg);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    
+}
+
+
+
 
 .contenedorLibros{
     margin-top: 80px;

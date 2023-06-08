@@ -5,6 +5,7 @@ package com.egg.Biblioteca.controladores;
 import com.egg.Biblioteca.entidades.Usuario;
 import com.egg.Biblioteca.excepciones.MiException;
 import com.egg.Biblioteca.servicios.UsuarioServicio;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -68,7 +69,7 @@ public class AdminControlador {
 
     @PostMapping("/modificarUsuario/{id}")
     public String actualizar1(MultipartFile archivo, @PathVariable String id, @RequestParam String nombre, @RequestParam String email,
-            @RequestParam String password, @RequestParam String password2, ModelMap modelo) {
+            @RequestParam String password, @RequestParam String password2, ModelMap modelo) throws IOException {
         try {
             modelo.put("usuario", usuarioServicio.getOne(id));
             usuarioServicio.actualizar(archivo, id, nombre, email, password, password2);

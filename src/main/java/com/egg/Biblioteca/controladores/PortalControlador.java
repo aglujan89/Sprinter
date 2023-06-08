@@ -5,6 +5,7 @@ package com.egg.Biblioteca.controladores;
 import com.egg.Biblioteca.entidades.Usuario;
 import com.egg.Biblioteca.excepciones.MiException;
 import com.egg.Biblioteca.servicios.UsuarioServicio;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,9 +44,9 @@ public class PortalControlador {
     }
        
     @PostMapping("/registro")
-    public String registro(MultipartFile archivo, @RequestParam String nombre, @RequestParam String email, @RequestParam String password, @RequestParam String password2, ModelMap modelo) throws MiException, ValidationException{
+    public String registro(MultipartFile archivo, @RequestParam String nombre, @RequestParam String email, @RequestParam String password, @RequestParam String password2, ModelMap modelo) throws MiException, ValidationException, IOException{
         try {
-            usuarioServicio.registrar(archivo, nombre, email, password, password2);
+                usuarioServicio.registrar(archivo, nombre, email, password, password2);
             modelo.put("exito", "Usuario registrado correctamente!");
             return "index.html";
         }  catch (MiException | ValidationException ex) {
@@ -84,7 +85,7 @@ public String miPerfil (HttpSession session, ModelMap modelo){
     @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
     @PostMapping("/perfil/{id}")
 public String actualizarPerfil (HttpSession session, MultipartFile archivo,@PathVariable String id, @RequestParam String nombre,@RequestParam String email, 
-            @RequestParam String password,@RequestParam String password2, ModelMap modelo) {
+            @RequestParam String password,@RequestParam String password2, ModelMap modelo) throws IOException {
 
         try {
             usuarioServicio.actualizar(archivo, id, nombre, email, password, password2);

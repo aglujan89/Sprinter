@@ -24,7 +24,7 @@
                         <tr>
                             <th scope="col">Id del Usuario</th>
                             <th scope="col">Nombre</th>
-                            <!--                        <th scope="col">Foto de Perfil</th>-->
+                            <th scope="col">Foto de Perfil</th>
                             <th scope="col" sec:authorize="hasRole('ADMIN')">Rol</th>
                             <th scope="col" sec:authorize="hasRole('ADMIN')">Cambiar Rol</th>
                             <th scope="col">Modificar</th>
@@ -35,9 +35,9 @@
                         <tr>
                             <th scope="row" th:text="${usuario.id}"></th>
                             <td th:text="${usuario.nombre}"></td>
-                            <!--foto perfil         <td 
+                             <td 
                                                         <a><img th:if="${usuario.imagen != null}" class="logo" th:src="@{/imagen/perfil/__${usuario.id}__}" ></a>
-                                                    </td>-->
+                                                    </td>
 
                             <td sec:authorize="hasRole('ADMIN')" th:text="${usuario.rol}"></td>
 

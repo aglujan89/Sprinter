@@ -13,7 +13,15 @@
                 </div>
                 <div class="container contenedorLibros">
                     <p class="tituloLibros" th:if="${session.usuariosession != null}" th:text=" 'Hola de vuelta '+ ${session.usuariosession.nombre} "></p>
-                     <a class="btn btn-xl mt-2 boton" th:href="@{/libro/lista}">Ver Listado</a>
+                     
+                </div>
+                <div class="container">
+                    <a class="d-flex align-items-center">
+                        <img class="logo" th:if="${session.usuariosession.imagen != null}" th:src="@{/imagen/perfil/__${session.usuariosession.id}__}" alt="Img logo egg">
+                    </a>
+                </div>
+                <div>
+                    <a class="btn btn-xl mt-2 boton" th:href="@{/libro/lista}">Ver Listado</a>
                 </div>
                 <div class="bg-circle-1 bg-circle"></div>
                 <div class="bg-circle-2 bg-circle"></div>

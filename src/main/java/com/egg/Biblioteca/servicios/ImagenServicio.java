@@ -76,6 +76,7 @@ public class ImagenServicio {
         if (archivo == null) {
             return archivo;
         } else if (archivo.getContentType().contains("octet")) {
+//            se puede usar tambien: "{else if (archivo.getBytes().length != 0){
             archivo = null;
         }
         return archivo;

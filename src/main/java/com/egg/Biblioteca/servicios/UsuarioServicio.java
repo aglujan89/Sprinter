@@ -125,6 +125,12 @@ public class UsuarioServicio implements UserDetailsService {
         if (respuesta.isPresent()) {
 
             Usuario usuario = respuesta.get();
+            
+            if (!email.equals(usuario.getEmail()) && usuarioRepositorio.buscarPorEmail(usuario.getEmail()) != null) {
+            throw new MiException("Ya existe un usuario registrado con ese mail");
+        }
+            
+            
             usuario.setNombre(nombre);
             usuario.setEmail(email);
 
